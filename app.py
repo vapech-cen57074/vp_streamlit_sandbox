@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
 from langchain_openai import OpenAI
-from langchain_core.runnables import RunnableLambda
 from langchain.prompts import PromptTemplate
-
+from langchain_core.runnables import RunnableLambda
 
 @st.cache_data
 def load_data():
@@ -21,7 +20,6 @@ def get_insights(question, data):
     Answer:
     """
     
-    
     # Prepare the input for the prompt
     columns = ", ".join(data.columns)
     data_head = data.head().to_dict(orient='records')
@@ -33,15 +31,17 @@ def get_insights(question, data):
     
     prompt = PromptTemplate(template=template, input_variables=["columns", "data_head", "question"])
 
-
     # Generate response using OpenAI
     llm = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
     formatted_prompt = prompt.format(**input_data)
+    
+    # Create a RunnableLambda with the llm callable
     runnable = RunnableLambda(lambda x: llm(x))
     
+    # Execute the runnable using the invoke method
     result = runnable.invoke(formatted_prompt)
+    
     return result
-
 
 # Streamlit App
 def main():

@@ -33,11 +33,15 @@ def get_insights(question, data):
     
     prompt = PromptTemplate(template=template, input_variables=["columns", "data_head", "question"])
 
+
     # Generate response using OpenAI
     llm = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-    runnable = RunnableLambda(lambda x: llm(prompt.format(**x)))
+    formatted_prompt = prompt.format(**input_data)
+    runnable = RunnableLambda(lambda x: llm(x))
     
-    return runnable(input_data)
+    result = runnable.invoke(formatted_prompt)
+    return result
+
 
 # Streamlit App
 def main():

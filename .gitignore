@@ -2,3 +2,5 @@
 titanic_llm/
 
 api key.txt
+
+.streamlit/
